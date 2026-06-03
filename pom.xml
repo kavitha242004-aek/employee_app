@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ══════════════════════════════════════════
+         Parent: Spring Boot BOM manages all
+         dependency versions automatically
+         ══════════════════════════════════════════ -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/>
+    </parent>
+
+    <!-- ══════════════════════════════════════════
+         Project Identity
+         Must match your package: com.myapp
+         ══════════════════════════════════════════ -->
+    <groupId>com.myapp</groupId>
+    <artifactId>my-project-application</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>my-project-application</name>
+    <description>Employee Management REST API - Spring Boot</description>
+
+    <!-- ══════════════════════════════════════════
+         Java Version
+         ══════════════════════════════════════════ -->
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <!-- ══════════════════════════════════════════
+         Dependencies
+         ══════════════════════════════════════════ -->
+    <dependencies>
+
+        <!-- 1. Spring Boot Web — REST controllers, Tomcat server -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 2. Spring Data JPA — EmployeeRepository extends JpaRepository -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- 3. Bean Validation — @NotBlank, @Email on Employee.java -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- 4. H2 In-Memory Database — matches your application.properties -->
+        <!--    scope=runtime: only needed at runtime, not compile time    -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ── TEST DEPENDENCIES ───────────────────────────── -->
+
+        <!-- 5. Spring Boot Test — includes JUnit 5, Mockito, AssertJ -->
+        <!--    Used by EmployeeServiceTest.java                       -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 6. Mockito Core — @Mock, @InjectMocks in EmployeeServiceTest -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 7. Mockito JUnit 5 integration — MockitoExtension support -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- ══════════════════════════════════════════
+         Build Configuration
+         ══════════════════════════════════════════ -->
+    <build>
+        <!-- Final JAR name — matches Dockerfile:
+             COPY --from=builder /app/target/my-project-application-1.0.0.jar app.jar -->
+        <finalName>my-project-application-1.0.0</finalName>
+
+        <plugins>
+
+            <!-- 1. Spring Boot Maven Plugin
+                 Creates executable fat JAR with embedded Tomcat -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- 2. Maven Compiler Plugin — enforce Java 17 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- 3. Maven Surefire Plugin
+                 Runs JUnit 5 tests and generates XML reports
+                 Jenkins reads: target/surefire-reports/*.xml -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Show test names in console output -->
+                    <printSummary>true</printSummary>
+                    <!-- Do NOT skip tests (Jenkins needs results) -->
+                    <skipTests>false</skipTests>
+                    <!-- Include all standard test class patterns -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                        <include>**/*Spec.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
