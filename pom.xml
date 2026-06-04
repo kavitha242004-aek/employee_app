@@ -100,7 +100,7 @@
          ══════════════════════════════════════════ -->
     <build>
         <!-- Final JAR name — matches Dockerfile:
-             COPY --from=builder /app/target/my-project-application-1.0.0.jar app.jar -->
+             COPY [from]=builder /app/target/my-project-application-1.0.0.jar app.jar -->
         <finalName>my-project-application-1.0.0</finalName>
 
         <plugins>
